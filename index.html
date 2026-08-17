@@ -1,70 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { background-color: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 450px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        h1 { color: #ff7b72; margin-bottom: 5px; font-size: 24px; }
-        p { color: #8b949e; margin: 0 0 20px 0; font-size: 14px; }
-        textarea { width: 100%; height: 100px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 10px; box-sizing: border-box; resize: none; font-family: monospace; }
-        button { background-color: #238636; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 14px; }
-        button:hover { background-color: #2ea043; }
-        #log-output { margin-top: 20px; background: #0d1117; border: 1px solid #30363d; padding: 10px; border-radius: 6px; text-align: left; font-size: 12px; max-height: 200px; overflow-y: auto; display: none; color: #58a6ff; line-height: 1.6; }
-        .download-btn { display: inline-block; background-color: #21262d; color: #58a6ff; border: 1px solid #30363d; padding: 10px 15px; border-radius: 6px; font-weight: bold; text-decoration: none; margin-top: 15px; width: calc(100% - 32px); font-size: 13px; text-align: center; cursor: pointer; }
-        .download-btn:hover { background-color: #30363d; color: #ecf2f8; }
-    </style>
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { background-color: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 450px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .logo-placeholder { font-size: 48px; margin-bottom: 5px; }
+        h1 { color: #ff7b72; margin: 0 0 5px 0; font-size: 24px; }
+        p { color: #8b949e; margin: 0 0 20px 0; font-size: 14px; }
+        textarea { width: 100%; height: 100px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 10px; box-sizing: border-box; resize: none; font-family: monospace; }
+        button { background-color: #238636; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 14px; }
+        button:hover { background-color: #2ea043; }
+        #log-output { margin-top: 20px; background: #0d1117; border: 1px solid #30363d; padding: 10px; border-radius: 6px; text-align: left; font-size: 12px; max-height: 200px; overflow-y: auto; display: none; color: #58a6ff; line-height: 1.6; }
+        .download-btn { display: inline-block; background-color: #21262d; color: #58a6ff; border: 1px solid #30363d; padding: 10px 15px; border-radius: 6px; font-weight: bold; text-decoration: none; margin-top: 15px; width: calc(100% - 32px); font-size: 13px; text-align: center; cursor: pointer; }
+        .download-btn:hover { background-color: #30363d; color: #ecf2f8; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🐜 FIRE ANT LABS</h1>
-        <p>Autonomous Software Pipeline</p>
-        <textarea id="task-input" placeholder="Describe the software you want FIRE ANT to design..."></textarea>
-        <button onclick="runPipeline()">Generate & Self-Correct Code</button>
-        <div id="log-output"></div>
-    </div>
-    <script>
-        let manufacturedCode = "";
-        let globalFileName = "app.html";
+    <div class="container">
+        <!-- Logo Section Space -->
+        <div class="logo-placeholder" id="company-logo">🐜</div>
+        <h1>FIRE ANT LABS</h1>
+        <p>Autonomous Software Pipeline</p>
+        <textarea id="task-input" placeholder="Describe the software you want FIRE ANT to design..."></textarea>
+        <button onclick="runPipeline()">Generate & Self-Correct Code</button>
+        <div id="log-output"></div>
+    </div>
+    <script>
+        let manufacturedCode = "";
+        let globalFileName = "app.html";
 
-        function runPipeline() {
-            const btn = document.querySelector('button');
-            const log = document.getElementById('log-output');
-            const input = document.getElementById('task-input').value;
-            if(!input) return alert("Please enter a software task description.");
-            
-            btn.innerText = "FIRE ANT Engine Initializing...";
-            log.style.display = "block";
-            log.innerHTML = "📡 Packaging transmission payload...<br>⚙️ Activating local MacBook core hardware rails...";
-            
-            setTimeout(() => {
-                log.innerHTML += "<br>📝 Fire Ant Labs is compiling the file...<br>⚙️ Running automated system test...<br>❌ CRASH DETECTED!<br>⚠️ Error Log Isolated: unterminated string literal<br>🔧 Activating Autonomous Self-Correction Loop...<br>💾 Overwriting file with corrected syntax...<br>✨ <b>SYSTEM RESOLVED: Code is now 100% stable and compiled.</b>";
-                
-                const query = input.toLowerCase();
-                if (query.includes("game") || query.includes("play") || query.includes("video")) {
-                    globalFileName = "game_app.html";
-                    manufacturedCode = `<!DOCTYPE html><html><head><title>🕹️ Game</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:monospace;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;}.card{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;text-align:center;}h2{color:#ff7b72;}#score{font-size:32px;color:#58a6ff;margin:20px 0;}.btn{background-color:#238636;color:white;border:none;padding:20px;border-radius:50%;font-size:24px;cursor:pointer;}</style></head><body><div class="card"><h2>🎯 Target Tap Arcade</h2><div id="score">0</div><button class="btn" onclick="score++;document.getElementById('score').innerText=score">🎯</button></div></body></html>`;
-                } else if (query.includes("calculator") || query.includes("weight") || query.includes("car") || query.includes("inventory")) {
-                    globalFileName = "calculator_app.html";
-                    manufacturedCode = `<!DOCTYPE html><html><head><title>🏎️ Garage Inventory</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.box{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;width:380px;text-align:center;}h2{color:#ff7b72;}.stat{background:#0d1117;margin:10px 0;padding:12px;border:1px solid #30363d;border-radius:6px;font-family:monospace;color:#58a6ff;font-weight:bold;display:flex;justify-content:space-between;}</style></head><body><div class="box"><h2>🏎️ Sports Car Inventory Canvas</h2><div class="stat"><span>⚙️ 2006 Aston Martin DBS:</span><span>$220,000</span></div><div class="stat"><span>⚙️ Ford GT Supercar:</span><span>$450,000</span></div><div class="stat" style="border-color:#238636;color:#58a6ff;"><span>📊 Total Garage Portfolio Value:</span><span>$670,000</span></div></div></body></html>`;
-                } else {
-                    globalFileName = "quiz_app.html";
-                    manufacturedCode = `<!DOCTYPE html><html><head><title>📚 Quiz</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.quiz-box{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;width:400px;text-align:center;}h2{color:#ff7b72;}.option-btn{background-color:#21262d;color:#c9d1d9;border:1px solid #30363d;padding:12px;margin:10px 0;border-radius:6px;width:100%;font-weight:bold;cursor:pointer;text-align:left;}#score-display{display:none;color:#58a6ff;font-size:18px;font-weight:bold;}</style></head><body><div class="quiz-box"><div id="quiz-content"><h2>Choose the correct spelling:</h2><button class="option-btn" onclick="showScore()">A) Accommodation</button><button class="option-btn" onclick="showScore()">B) Acomodation</button><button class="option-btn" onclick="showScore()">C) Accomodation</button></div><div id="score-display">✨ Great job! You scored 1/1 on the study challenge!</div></div><script>function showScore(){document.getElementById('quiz-content').style.display='none';document.getElementById('score-display').style.display='block';}<\/script></body></html>`;
-                }
-                
-                log.innerHTML += `<div class="download-btn" onclick="forceDownload()">📥 Download Visual Application Bundle</div>`;
-                btn.innerText = "Generate & Self-Correct Code";
-            }, 1500);
-        }
+        function runPipeline() {
+            const btn = document.querySelector('button');
+            const log = document.getElementById('log-output');
+            const input = document.getElementById('task-input').value;
+            if(!input) return alert("Please enter a software task description.");
+            
+            btn.innerText = "FIRE ANT Engine Initializing...";
+            log.style.display = "block";
+            log.innerHTML = "📡 Packaging transmission payload...<br>⚙️ Activating local MacBook core hardware rails...";
+            
+            setTimeout(() => {
+                log.innerHTML += "<br>📝 Fire Ant Labs is compiling the file...<br>⚙️ Running automated system test...<br>❌ CRASH DETECTED!<br>⚠️ Error Log Isolated: unterminated string literal<br>🔧 Activating Autonomous Self-Correction Loop...<br>💾 Overwriting file with corrected syntax...<br>✨ <b>SYSTEM RESOLVED: Code is now 100% stable and compiled.</b>";
+                
+                const query = input.toLowerCase();
+                if (query.includes("game") || query.includes("play") || query.includes("video")) {
+                    globalFileName = "game_app.html";
+                    manufacturedCode = `<!DOCTYPE html><html><head><title>🕹️ Game</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:monospace;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;}.card{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;text-align:center;}h2{color:#ff7b72;}#score{font-size:32px;color:#58a6ff;margin:20px 0;}.btn{background-color:#238636;color:white;border:none;padding:20px;border-radius:50%;font-size:24px;cursor:pointer;}</style></head><body><div class="card"><h2>🎯 Target Tap Arcade</h2><div id="score">0</div><button class="btn" onclick="score++;document.getElementById('score').innerText=score">🎯</button></div></body></html>`;
+                } else if (query.includes("calculator") || query.includes("weight") || query.includes("car") || query.includes("inventory")) {
+                    globalFileName = "calculator_app.html";
+                    manufacturedCode = `<!DOCTYPE html><html><head><title>🏎️ Garage Inventory</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.box{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;width:380px;text-align:center;}h2{color:#ff7b72;}.stat{background:#0d1117;margin:10px 0;padding:12px;border:1px solid #30363d;border-radius:6px;font-family:monospace;color:#58a6ff;font-weight:bold;display:flex;justify-content:space-between;}</style></head><body><div class="box"><h2>🏎️ Sports Car Inventory Canvas</h2><div class="stat"><span>⚙️ 2006 Aston Martin DBS:</span><span>$220,000</span></div><div class="stat"><span>⚙️ Ford GT Supercar:</span><span>$450,000</span></div><div class="stat" style="border-color:#238636;color:#58a6ff;"><span>📊 Total Garage Portfolio Value:</span><span>$670,000</span></div></div></body></html>`;
+                } else {
+                    globalFileName = "quiz_app.html";
+                    manufacturedCode = `<!DOCTYPE html><html><head><title>📚 Quiz</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.quiz-box{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;width:400px;text-align:center;}h2{color:#ff7b72;}.option-btn{background-color:#21262d;color:#c9d1d9;border:1px solid #30363d;padding:12px;margin:10px 0;border-radius:6px;width:100%;font-weight:bold;cursor:pointer;text-align:left;}#score-display{display:none;color:#58a6ff;font-size:18px;font-weight:bold;}</style></head><body><div class="quiz-box"><div id="quiz-content"><h2>Choose the correct spelling:</h2><button class="option-btn" onclick="showScore()">A) Accommodation</button><button class="option-btn" onclick="showScore()">B) Acomodation</button><button class="option-btn" onclick="showScore()">C) Accomodation</button></div><div id="score-display">✨ Great job! You scored 1/1 on the study challenge!</div></div><script>function showScore(){document.getElementById('quiz-content').style.display='none';document.getElementById('score-display').style.display='block';}<\/script></body></html>`;
+                }
+                
+                log.innerHTML += `<div class="download-btn" onclick="forceDownload()">📥 Download Visual Application Bundle</div>`;
+                btn.innerText = "Generate & Self-Correct Code";
+            }, 1500);
+        }
 
-        function forceDownload() {
-            const blob = new Blob([manufacturedCode], { type: 'text/html' });
-            const element = document.createElement('a');
-            element.href = URL.createObjectURL(blob);
-            element.download = globalFileName;
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        }
-    </script>
+        function forceDownload() {
+            const blob = new Blob([manufacturedCode], { type: 'text/html' });
+            const element = document.createElement('a');
+            element.href = URL.createObjectURL(blob);
+            element.download = globalFileName;
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+    </script>
 </body>
 </html>

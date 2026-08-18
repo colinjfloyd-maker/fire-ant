@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Master Viewport Sizing Token: Forces the browser to auto-scale on all phone and MacBook screens instantly -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 🐜 Global Brand Favicon Switchboard: Tells iPhones and Safari to display your ant outline logo on search grids -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    
     <style>
         body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .container { background-color: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); box-sizing: border-box; }
@@ -19,7 +23,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo-placeholder" id="company-logo">🐜</div>
+        <div class="logo-placeholder" id="company-logo"><img src="logo.png" alt="🐜" style="width:64px; height:64px; object-fit:contain; filter: drop-shadow(0 0 8px #ff7b72);"></div>
         <h1>FIRE ANT LABS</h1>
         <p>Autonomous Software Pipeline</p>
         <textarea id="task-input" placeholder="Describe the software you want FIRE ANT to design..."></textarea>

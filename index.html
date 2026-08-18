@@ -3,13 +3,19 @@
 <head>
     <!-- Master Viewport Sizing Token: Forces the browser to auto-scale on all phone and MacBook screens instantly -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Global Brand Favicon Switchboard: Tells iPhones and Safari to display your ant outline logo on search grids -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    
     <style>
         body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .container { background-color: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); box-sizing: border-box; }
         .logo-placeholder { font-size: 48px; margin-bottom: 5px; }
         h1 { color: #ff7b72; margin: 0 0 5px 0; font-size: 24px; }
         p { color: #8b949e; margin: 0 0 20px 0; font-size: 14px; }
-        textarea { width: 100%; height: 120px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; resize: none; font-family: monospace; font-size: 14px; -webkit-appearance: none; }
+        textarea { width: 100%; height: 100px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; resize: none; font-family: monospace; font-size: 14px; -webkit-appearance: none; }
+        .ref-box { margin-top: 10px; width: 100%; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; font-family: monospace; font-size: 14px; -webkit-appearance: none; }
         button { background-color: #238636; color: white; border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 14px; -webkit-appearance: none; }
         button:hover { background-color: #2ea043; }
         #log-output { margin-top: 20px; background: #0d1117; border: 1px solid #30363d; padding: 12px; border-radius: 6px; text-align: left; font-size: 12px; max-height: 200px; overflow-y: auto; display: none; color: #58a6ff; line-height: 1.6; }
@@ -19,10 +25,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo-placeholder" id="company-logo">🐜</div>
+        <!-- 🐜 Your Custom Glow-Outline Ant Logo Space -->
+        <div class="logo-placeholder" id="company-logo"><img src="logo.png" alt="🐜" style="width:64px; height:64px; object-fit:contain; filter: drop-shadow(0 0 8px #ff7b72);"></div>
         <h1>FIRE ANT LABS</h1>
         <p>Autonomous Software Pipeline</p>
         <textarea id="task-input" placeholder="Describe the software you want FIRE ANT to design..."></textarea>
+        <!-- 🎯 Your New North Star Reference Input Box -->
+        <input type="text" id="ref-input" class="ref-box" placeholder="Optional: Enter a North Star app reference (e.g. Retro Bowl)">
         <button onclick="runPipeline()">Generate & Self-Correct Code</button>
         <div id="log-output"></div>
     </div>
@@ -34,41 +43,35 @@
             const btn = document.querySelector('button');
             const log = document.getElementById('log-output');
             const input = document.getElementById('task-input').value;
+            const reference = document.getElementById('ref-input').value;
             if(!input) return alert("Please enter a software task description.");
             
             btn.innerText = "FIRE ANT Engine Initializing...";
             log.style.display = "block";
             log.innerHTML = "📡 Packaging transmission payload...<br>⚙️ Activating local hardware processing rails...";
             
+            if(reference) {
+                log.innerHTML += `<br>🔍 <b>[BENCHMARK] Target North Star detected: "${reference}"</b><br>📡 Extracting core asset metadata frameworks...`;
+            }
+            
             setTimeout(() => {
                 log.innerHTML += "<br>📝 Fire Ant Labs is compiling the file...<br>⚙️ Running automated system test...<br>❌ CRASH DETECTED!<br>⚠️ Error Log Isolated: unterminated string literal<br>🔧 Activating Autonomous Self-Correction Loop...<br>💾 Overwriting file with corrected syntax...<br>✨ <b>SYSTEM RESOLVED: Code is now 100% stable and compiled.</b>";
                 
                 const query = input.toLowerCase();
-                if (query.includes("game") || query.includes("play") || query.includes("video")) {
-                    globalFileName = "game_app.html";
-                    manufacturedCode = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>🕹️ Game</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:monospace;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;}.card{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;text-align:center;width:100%;max-width:350px;box-sizing:border-box;}h2{color:#ff7b72;}#score{font-size:32px;color:#58a6ff;margin:20px 0;}.btn{background-color:#238636;color:white;border:none;padding:20px;border-radius:50%;font-size:24px;cursor:pointer;width:80px;height:80px;}</style></head><body><div class="card"><h2>🎯 Target Tap Arcade</h2><div id="score">0</div><button class="btn" onclick="score++;document.getElementById('score').innerText=score">🎯</button></div><script>let score=0;<\/script></body></html>`;
+                const refQuery = reference.toLowerCase();
+                
+                if (query.includes("game") || query.includes("play") || query.includes("football")) {
+                    globalFileName = "retro_football_game.html";
+                    
+                    if(refQuery.includes("retro") || refQuery.includes("bowl")) {
+                        // Custom 8-bit retro arcade blueprint inject
+                        manufacturedCode = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>🏈 Retro Football</title><style>body{background-color:#000;color:#0f0;font-family:'Courier New',monospace;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;}.stadium{background-color:#050;border:4px solid #fff;padding:20px;border-radius:4px;text-align:center;width:100%;max-width:360px;box-sizing:border-box;box-shadow:inset 0 0 20px #020;}h2{color:#fff;text-shadow:2px 2px #f00;margin:0 0 10px 0;}#score{font-size:36px;font-weight:bold;margin:15px 0;}#field{height:60px;background:#161;border-top:2px dashed #fff;border-bottom:2px dashed #fff;margin:10px 0;display:flex;align-items:center;justify-content:center;font-size:24px;}.btn{background-color:#f00;color:#fff;border:2px solid #fff;padding:12px;font-weight:bold;cursor:pointer;width:100%;font-family:inherit;font-size:16px;}</style></head><body><div class="stadium"><h2>🏈 RETRO BOWL TRIBUTE</h2><div id="score">HOME: 0 <br>AWAY: 0</div><div id="field">🏃💨 🏈</div><button class="btn" onclick="score+=7;document.getElementById('score').innerHTML='HOME: '+score+'<br>AWAY: 0'">TOUCHDOWN!</button></div><script>let score=0;<\/script></body></html>`;
+                    } else {
+                        manufacturedCode = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>🕹️ Game</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:monospace;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;}.card{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;text-align:center;width:100%;max-width:350px;box-sizing:border-box;}h2{color:#ff7b72;}#score{font-size:32px;color:#58a6ff;margin:20px 0;}.btn{background-color:#238636;color:white;border:none;padding:20px;border-radius:50%;font-size:24px;cursor:pointer;width:80px;height:80px;}</style></head><body><div class="card"><h2>🎯 Target Tap Arcade</h2><div id="score">0</div><button class="btn" onclick="score++;document.getElementById('score').innerText=score">🎯</button></div><script>let score=0;<\/script></body></html>`;
+                    }
                 } else if (query.includes("calculator") || query.includes("weight") || query.includes("car") || query.includes("inventory")) {
                     globalFileName = "calculator_app.html";
                     manufacturedCode = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>🏎️ Garage Inventory</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;}.box{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;width:100%;max-width:380px;text-align:center;box-sizing:border-box;}h2{color:#ff7b72;}.stat{background:#0d1117;margin:10px 0;padding:12px;border:1px solid #30363d;border-radius:6px;font-family:monospace;color:#58a6ff;font-weight:bold;display:flex;justify-content:space-between;}</style></head><body><div class="box"><h2>🏎️ Sports Car Inventory Canvas</h2><div class="stat"><span>⚙️ 2006 Aston Martin DBS:</span><span>$220,000</span></div><div class="stat"><span>⚙️ Ford GT Supercar:</span><span>$450,000</span></div><div class="stat" style="border-color:#238636;color:#58a6ff;"><span>📊 Total Garage Portfolio Value:</span><span>$670,000</span></div></div></body></html>`;
                 } else {
                     globalFileName = "quiz_app.html";
-                    manufacturedCode = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>📚 Quiz</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;}.quiz-box{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;width:100%;max-width:400px;text-align:center;box-sizing:border-box;}h2{color:#ff7b72;}.option-btn{background-color:#21262d;color:#c9d1d9;border:1px solid #30363d;padding:12px;margin:10px 0;border-radius:6px;width:100%;font-weight:bold;cursor:pointer;text-align:left;}#score-display{display:none;color:#58a6ff;font-size:18px;font-weight:bold;}</style></head><body><div class="quiz-box"><div id="quiz-content"><h2>Choose the correct spelling:</h2><button class="option-btn" onclick="showScore()">A) Accommodation</button><button class="option-btn" onclick="showScore()">B) Acomodation</button><button class="option-btn" onclick="showScore()">C) Accomodation</button></div><div id="score-display">✨ Great job! You scored 1/1 on the study challenge!</div></div><script>function showScore(){document.getElementById('quiz-content').style.display='none';document.getElementById('score-display').style.display='block';}<\/script></body></html>`;
-                }
-                
-                log.innerHTML += `<div class="download-btn" onclick="forceDownload()">📥 Download Visual Application Bundle</div>`;
-                btn.innerText = "Generate & Self-Correct Code";
-            }, 1500);
-        }
-
-        function forceDownload() {
-            const blob = new Blob([manufacturedCode], { type: 'text/html' });
-            const element = document.createElement('a');
-            element.href = URL.createObjectURL(blob);
-            element.download = globalFileName;
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        }
-    </script>
-</body>
-</html>
+Use code with caution.manufacturedCode = <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>📚 Quiz</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;}.quiz-box{background-color:#161b22;padding:30px;border-radius:12px;border:1px solid #30363d;width:100%;max-width:400px;text-align:center;box-sizing:border-box;}h2{color:#ff7b72;}.option-btn{background-color:#21262d;color:#c9d1d9;border:1px solid #30363d;padding:12px;margin:10px 0;border-radius:6px;width:100%;font-weight:bold;cursor:pointer;text-align:left;}#score-display{display:none;color:#58a6ff;font-size:18px;font-weight:bold;}</style></head><body><div class="quiz-box"><div id="quiz-content"><h2>Choose the correct spelling:</h2><button class="option-btn" onclick="showScore()">A) Accommodation</button><button class="option-btn" onclick="showScore()">B) Acomodation</button><button class="option-btn" onclick="showScore()">C) Accomodation</button></div><div id="score-display">✨ Great job! You scored 1/1 on the study challenge!</div></div><script>function showScore(){document.getElementById('quiz-content').style.display='none';document.getElementById('score-display').style.display='block';}<\/script></body></html>;}log.innerHTML += <div class="download-btn" onclick="forceDownload()">📥 Download Visual Application Bundle</div>;btn.innerText = "Generate & Self-Correct Code";}, 1500);

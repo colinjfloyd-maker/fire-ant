@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Master Viewport Sizing Token: Forces the browser to auto-scale on all phone and MacBook screens instantly -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
     <style>
         body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .container { background-color: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); box-sizing: border-box; }
@@ -14,7 +13,7 @@
         button { background-color: #238636; color: white; border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 14px; -webkit-appearance: none; }
         button:hover { background-color: #2ea043; }
         #log-output { margin-top: 20px; background: #0d1117; border: 1px solid #30363d; padding: 12px; border-radius: 6px; text-align: left; font-size: 12px; max-height: 200px; overflow-y: auto; display: none; color: #58a6ff; line-height: 1.6; }
-        .download-btn { display: inline-block; background-color: #21262d; color: #58a6ff; border: 1px solid #30363d; padding: 12px 15px; border-radius: 6px; font-weight: bold; text-decoration: none; margin-top: 15px; width: 100%; box-sizing: border-box; font-size: 13px; text-align: center; cursor: pointer; }
+        .download-btn { display: inline-block; background-color: #21262d; color: #58a6ff; border: 1px solid #30363d; padding: 12px 15px; border-radius: 6px; font-weight: bold; text-decoration: none; margin-top: 15px; width: 100%; box-sizing: border-box; font-size: 13px; text-align: center; cursor: pointer; -webkit-appearance: none; }
         .download-btn:hover { background-color: #30363d; color: #ecf2f8; }
     </style>
 </head>
@@ -49,15 +48,13 @@
                 log.innerHTML += "<br>📝 Fire Ant Labs is compiling the file...<br>⚙️ Running automated system test...<br>❌ CRASH DETECTED!<br>⚠️ Error Log Isolated: unterminated string literal<br>🔧 Activating Autonomous Self-Correction Loop...<br>💾 Overwriting file with corrected syntax...<br>✨ <b>SYSTEM RESOLVED: Code is now 100% stable and compiled.</b>";
                 
                 const userPrompt = input.trim();
-                const cleanPrompt = cleanString(userPrompt);
                 const query = userPrompt.toLowerCase();
                 
-                // Formulate smart file names dynamically based on the input description
                 let words = query.split(/\s+/);
                 let seedWord = words.find(w => w.length > 3) || "custom";
                 globalFileName = seedWord + "_app.html";
 
-                // Universal dynamic HTML application factory blueprint
+                // Updated Dynamic Meta-Template Engine to be 100% mobile touch compatible
                 manufacturedCode = `<!DOCTYPE html>
 <html>
 <head>
@@ -69,8 +66,8 @@
         h2 { color: #ff7b72; margin-top: 0; font-size: 22px; text-transform: capitalize; }
         .prompt-display { background: #0d1117; margin: 15px 0; padding: 15px; border: 1px solid #30363d; border-radius: 6px; font-family: monospace; color: #58a6ff; font-size: 14px; text-align: left; word-break: break-word; line-height: 1.5; }
         .status-badge { display: inline-block; background-color: rgba(35, 134, 54, 0.15); color: #56d364; border: 1px solid rgba(46, 160, 67, 0.4); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; }
-        .action-input { width: 100%; padding: 10px; margin: 10px 0; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-family: inherit; font-size: 14px; box-sizing: border-box; }
-        .action-btn { background-color: #238636; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px; transition: background 0.2s; }
+        .action-input { width: 100%; padding: 12px; margin: 10px 0; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-family: inherit; font-size: 14px; box-sizing: border-box; -webkit-appearance: none; }
+        .action-btn { background-color: #238636; color: white; border: none; padding: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px; transition: background 0.2s; -webkit-appearance: none; touch-action: manipulation; }
         .action-btn:hover { background-color: #2ea043; }
         #output-feedback { margin-top: 15px; padding: 12px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #58a6ff; font-family: monospace; font-size: 13px; display: none; text-align: left; }
     </style>
@@ -84,13 +81,17 @@
             ${userPrompt}
         </div>
         
-        <input type="text" id="user-entry" class="action-input" placeholder="Interact with this application container...">
-        <button class="action-btn" onclick="executeAppLogic()">Submit Workspace Action</button>
+        <input type="text" id="user-entry" class="action-input" placeholder="Tap here to enter text...">
+        <button class="action-btn" id="main-action-btn">Submit Workspace Action</button>
         
         <div id="output-feedback"></div>
     </div>
     <script>
-        function executeAppLogic() {
+        // Mobile Handshake: Maps both tap pressures and mouse clicks evenly to remove lag
+        const triggerBtn = document.getElementById('main-action-btn');
+        
+        function executeAppLogic(e) {
+            if(e) e.preventDefault();
             const inputVal = document.getElementById('user-entry').value;
             const feedback = document.getElementById('output-feedback');
             if(!inputVal) return alert("Please enter data to interact with the container.");
@@ -98,6 +99,9 @@
             feedback.style.display = "block";
             feedback.innerHTML = "🚀 <b>Container Input Confirmed:</b><br>" + inputVal + "<br><br>✨ Processing complete under original master specification telemetry rails successfully.";
         }
+
+        triggerBtn.addEventListener('click', executeAppLogic);
+        triggerBtn.addEventListener('touchend', executeAppLogic);
     <\/script>
 </body>
 </html>`;

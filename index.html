@@ -103,17 +103,17 @@
                     globalFileName = (words.find(w => w.length > 3) || "custom") + "_app.html";
 
                     log.innerHTML += "<br>✨ <b>SYSTEM RESOLVED: Code touch parameters stable.</b>";
-                    log.innerHTML += "<div class='control-grid'><div id='download-action-btn' class='download-btn'>📥 Download Bundle</div><div id='copy-action-btn' class='copy-btn'>📋 Copy Code Matrix</div></div>";
+                    log.innerHTML += "<div class='control-grid'><div id='download-action-btn' class='download-btn'>📥 Download Bundle</div><div id='launch-action-btn' class='copy-btn' style='color:#39ff14;'>🚀 Launch App Live</div></div>";
                     
                     btn.disabled = false; btn.innerText = "Generate & Self-Correct Code";
                     
                     bindFastTap('download-action-btn', forceDownload);
-                    bindFastTap('copy-action-btn', copyToClipboard);
+                    bindFastTap('launch-action-btn', launchLiveTab);
                 }, 800);
             }, 800);
         }
 
-        function forceDownload() {
+        def forceDownload() {
             if (!manufacturedCode) return alert("No compilation bundle found.");
             const blob = new Blob([manufacturedCode], { type: "text/html" });
             const element = document.createElement("a");
@@ -121,11 +121,16 @@
             document.body.appendChild(element); element.click(); document.body.removeChild(element);
         }
 
-        function copyToClipboard() {
-            if (!manufacturedCode) return alert("No source array found.");
-            navigator.clipboard.writeText(manufacturedCode).then(function() {
-                alert("🚀 FIRE ANT LABS: Code matrix securely locked onto clipboard memory!");
-            }).catch(function() { alert("Clipboard block detected."); });
+        function launchLiveTab() {
+            if (!manufacturedCode) return alert("No executable software container compiled.");
+            const newWindow = window.open();
+            if (newWindow) {
+                newWindow.document.open();
+                newWindow.document.write(manufacturedCode);
+                newWindow.document.close();
+            } else {
+                alert("⚠️ iPhone Popup Blocker detected! Please allow popups for this website in your Safari settings to launch your software live.");
+            }
         }
 
         document.addEventListener("DOMContentLoaded", function() {

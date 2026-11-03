@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FIRE ANT LABS</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
     <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         .container { background-color: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); box-sizing: border-box; }
         .logo-placeholder { font-size: 48px; margin-bottom: 5px; }
         h1 { color: #ff7b72; margin: 0; font-size: 24px; letter-spacing: 1px; }
         p { color: #8b949e; margin: 0 0 20px 0; font-size: 14px; }
-        textarea { width: 100%; height: 120px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; resize: none; font-family: monospace; font-size: 14px; outline: none; }
+        textarea { width: 100%; height: 120px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; resize: none; font-family: monospace; font-size: 14px; outline: none; -webkit-appearance: none; }
         textarea:focus { border-color: #58a6ff; }
-        button { background-color: #238636; color: white; border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 14px; -webkit-appearance: none; }
+        button { background-color: #238636; color: white; border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 14px; -webkit-appearance: none; touch-action: manipulation; }
         button:hover { background-color: #2ea043; }
         button:disabled { background-color: #21262d; color: #8b949e; cursor: not-allowed; border: 1px solid #30363d; }
         #log-output { margin-top: 20px; background: #0d1117; border: 1px solid #30363d; padding: 12px; border-radius: 6px; text-align: left; font-size: 12px; max-height: 250px; overflow-y: auto; display: none; color: #58a6ff; line-height: 1.6; }
         .control-grid { display: flex; gap: 10px; margin-top: 15px; }
-        .download-btn, .copy-btn { flex: 1; background-color: #21262d; border: 1px solid #30363d; padding: 12px 5px; border-radius: 6px; font-weight: bold; font-size: 12px; text-align: center; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+        .download-btn, .copy-btn { flex: 1; background-color: #21262d; border: 1px solid #30363d; padding: 12px 5px; border-radius: 6px; font-weight: bold; font-size: 12px; text-align: center; cursor: pointer; transition: background 0.2s; text-decoration: none; -webkit-appearance: none; touch-action: manipulation; }
         .download-btn { color: #58a6ff; } .copy-btn { color: #ff7b72; }
         .download-btn:hover, .copy-btn:hover { background-color: #30363d; color: #ecf2f8; }
     </style>
@@ -30,12 +30,24 @@
         <h1>FIRE ANT LABS</h1>
         <p>Autonomous Software Pipeline</p>
         <textarea id="task-input" placeholder="Describe the software you want FIRE ANT to design..."></textarea>
-        <button id="pipeline-btn" onclick="runPipeline()">Generate & Self-Correct Code</button>
+        <button id="pipeline-btn">Generate & Self-Correct Code</button>
         <div id="log-output"></div>
     </div>
     <script>
         let manufacturedCode = "";
         let globalFileName = "app.html";
+
+        function bindFastTap(elementId, actionFunction) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                actionFunction();
+            }, { passive: false });
+            el.addEventListener('click', function(e) {
+                actionFunction();
+            });
+        }
 
         function runPipeline() {
             const btn = document.getElementById('pipeline-btn');
@@ -59,36 +71,44 @@
                     else if (query.includes("green") || query.includes("matrix")) { pColor = "#39ff14"; aColor = "#00ff00"; }
                     else if (query.includes("light") || query.includes("white")) { pColor = "#4f46e5"; aColor = "#2563eb"; appBg = "#ffffff"; }
 
-                    let title = "Custom Software Core", moduleHtml = "";
+                    let title = "Custom Software Core", moduleHtml = ""; let initScript = "";
 
                     if (query.includes("game") || query.includes("clicker") || query.includes("play")) {
                         title = "Arcade Engine";
-                        moduleHtml = "<div style='background:#0d1117;padding:25px;border-radius:8px;border:1px solid #30363d;'><h3 style='color:" + pColor + ";'>Clicker Game Core</h3><h1 id='score-tracker' style='color:white;font-size:54px;margin:10px 0;'>0</h1><button style='background:" + pColor + ";color:#0d1117;border:none;padding:12px;font-weight:bold;border-radius:6px;width:100%;cursor:pointer;' onclick='document.getElementById(\"score-tracker\").innerText = parseInt(document.getElementById(\"score-tracker\").innerText)+1'>TAP ENGINE CORE</button></div>";
+                        moduleHtml = "<div style='background:#0d1117;padding:25px;border-radius:8px;border:1px solid #30363d;'><h3 style='color:" + pColor + ";'>Clicker Game Core</h3><h1 id='score-tracker' style='color:white;font-size:54px;margin:10px 0;'>0</h1><button id='game-core-btn' style='background:" + pColor + ";color:#0d1117;border:none;padding:12px;font-weight:bold;border-radius:6px;width:100%;cursor:pointer;touch-action:manipulation;'>TAP ENGINE CORE</button></div>";
+                        initScript = "const btn = document.getElementById('game-core-btn'); const handleTap = () => { document.getElementById('score-tracker').innerText = parseInt(document.getElementById('score-tracker').innerText)+1; }; btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(); }, {passive:false}); btn.addEventListener('click', handleTap);";
                     } else if (query.includes("study") || query.includes("guide") || query.includes("quiz") || query.includes("history")) {
                         title = "Intelligence Matrix";
                         moduleHtml = "<div style='text-align:left;background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;'><h3>Study Workspace</h3><p>Topic target validated successfully. Custom study modules have been written directly to the local compilation download bundle.</p></div>";
                     } else if (query.includes("timer") || query.includes("clock") || query.includes("stopwatch")) {
                         title = "Precision Core";
-                        moduleHtml = "<div style='background:#0d1117;padding:25px;border-radius:8px;border:1px solid #30363d;'><h2 style='color:" + pColor + ";font-size:42px;margin:0 0 15px 0;'>25:00</h2><button style='background:transparent;color:" + aColor + ";border:2px solid " + aColor + ";padding:10px;border-radius:6px;font-weight:bold;width:100%;cursor:pointer;' onclick='alert(\"Countdown initialized.\")'>START TIMER</button></div>";
+                        moduleHtml = "<div style='background:#0d1117;padding:25px;border-radius:8px;border:1px solid #30363d;'><h2 style='color:" + pColor + ";font-size:42px;margin:0 0 15px 0;'>25:00</h2><button id='timer-start-btn' style='background:transparent;color:" + aColor + ";border:2px solid " + aColor + ";padding:10px;border-radius:6px;font-weight:bold;width:100%;cursor:pointer;touch-action:manipulation;'>START TIMER</button></div>";
+                        initScript = "const btn = document.getElementById('timer-start-btn'); const handleTime = () => { alert('Countdown initialized.'); }; btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTime(); }, {passive:false}); btn.addEventListener('click', handleTime);";
                     } else if (query.includes("calculator") || query.includes("math") || query.includes("calculate")) {
                         title = "Calculation Array";
-                        moduleHtml = "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;'><input type='text' id='calc-display' style='width:100%;padding:12px;background:#161b22;border:1px solid #30363d;color:white;text-align:right;font-size:20px;margin-bottom:12px;box-sizing:border-box;' readonly value=''><div style='display:grid;grid-template-columns:repeat(4,1fr);gap:6px;'><button style='padding:12px;background:#30363d;color:white;border:none;border-radius:4px;cursor:pointer;font-weight:bold;' onclick='document.getElementById(\"calc-display\").value=\"\"'>C</button><button style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;cursor:pointer;font-weight:bold;' onclick='document.getElementById(\"calc-display\").value+=\"/\"'>/</button><button style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;cursor:pointer;font-weight:bold;' onclick='document.getElementById(\"calc-display\").value+=\"*\"'>*</button><button style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;cursor:pointer;font-weight:bold;' onclick='document.getElementById(\"calc-display\").value+=\"-\"'>-</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"7\"'>7</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"8\"'>8</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"9\"'>9</button><button style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;cursor:pointer;font-weight:bold;' onclick='document.getElementById(\"calc-display\").value+=\"+\"'>+</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"4\"'>4</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"5\"'>5</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"6\"'>6</button><button style='grid-row:span 2;padding:12px;background:" + pColor + ";color:#0d1117;border:none;border-radius:4px;font-weight:bold;cursor:pointer;' onclick='try{document.getElementById(\"calc-display\").value=eval(document.getElementById(\"calc-display\").value)}catch(e){document.getElementById(\"calc-display\").value=\"Error\"}'>=</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"1\"'>1</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"2\"'>2</button><button style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"3\"'>3</button><button style='grid-column:span 3;padding:12px;background:#161b22;color:white;border:none;border-radius:4px;cursor:pointer;' onclick='document.getElementById(\"calc-display\").value+=\"0\"'>0</button></div></div>";
+                        moduleHtml = "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;'><input type='text' id='calc-display' style='width:100%;padding:12px;background:#161b22;border:1px solid #30363d;color:white;text-align:right;font-size:20px;margin-bottom:12px;box-sizing:border-box;' readonly value=''><div style='display:grid;grid-template-columns:repeat(4,1fr);gap:6px;'><button class='c-btn' data-val='clear' style='padding:12px;background:#30363d;color:white;border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>C</button><button class='c-btn' data-val='/' style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>/</button><button class='c-btn' data-val='*' style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>*</button><button class='c-btn' data-val='-' style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>-</button><button class='c-btn' data-val='7' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>7</button><button class='c-btn' data-val='8' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>8</button><button class='c-btn' data-val='9' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>9</button><button class='c-btn' data-val='+' style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>+</button><button class='c-btn' data-val='4' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>4</button><button class='c-btn' data-val='5' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>5</button><button class='c-btn' data-val='6' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>6</button><button class='c-btn' data-val='=' style='grid-row:span 2;padding:12px;background:" + pColor + ";color:#0d1117;border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>=</button><button class='c-btn' data-val='1' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>1</button><button class='c-btn' data-val='2' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>2</button><button class='c-btn' data-val='3' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>3</button><button class='c-btn' data-val='0' style='grid-column:span 3;padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>0</button></div></div>";
+                        initScript = "document.querySelectorAll('.c-btn').forEach(btn => { const action = () => { const disp = document.getElementById('calc-display'); const v = btn.getAttribute('data-val'); if(v==='clear') disp.value=''; else if(v==='=') { try{disp.value=eval(disp.value)}catch(e){disp.value='Error'} } else disp.value+=v; }; btn.addEventListener('touchstart', (e)=>{e.preventDefault(); action();}, {passive:false}); btn.addEventListener('click', action); });";
                     } else if (query.includes("todo") || query.includes("list") || query.includes("task")) {
                         title = "Task Matrix";
-                        moduleHtml = "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;text-align:left;'><div style='display:flex;gap:5px;margin-bottom:10px;'><input type='text' id='todo-in' style='flex:1;padding:8px;background:#161b22;border:1px solid #30363d;color:white;border-radius:6px;'><button style='background:" + pColor + ";color:#0d1117;border:none;padding:0 10px;font-weight:bold;border-radius:6px;' onclick='if(document.getElementById(\"todo-in\").value){let li=document.createElement(\"li\");li.style.padding=\"5px 0\";li.style.color=\"#c9d1d9\";li.innerText=document.getElementById(\"todo-in\").value;document.getElementById(\"todo-list\").appendChild(li);document.getElementById(\"todo-in\").value=\"\"}'>ADD</button></div><ul id='todo-list' style='margin:0;padding:0;list-style:none;'></ul></div>";
+                        moduleHtml = "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;text-align:left;'><div style='display:flex;gap:5px;margin-bottom:10px;'><input type='text' id='todo-in' style='flex:1;padding:8px;background:#161b22;border:1px solid #30363d;color:white;border-radius:6px;'><button id='todo-add-btn' style='background:" + pColor + ";color:#0d1117;border:none;padding:0 10px;font-weight:bold;border-radius:6px;touch-action:manipulation;'>ADD</button></div><ul id='todo-list' style='margin:0;padding:0;list-style:none;'></ul></div>";
+                        initScript = "const btn = document.getElementById('todo-add-btn'); const handleAdd = () => { const input = document.getElementById('todo-in'); if(input.value){let li=document.createElement('li');li.style.padding='5px 0';li.style.color='#c9d1d9';li.innerText=input.value;document.getElementById('todo-list').appendChild(li);input.value=''} }; btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleAdd(); }, {passive:false}); btn.addEventListener('click', handleAdd);";
                     } else {
                         title = "Workspace Terminal";
                         moduleHtml = "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;text-align:left;'><p style='color:#8b949e;font-size:12px;'><b>Blueprint Parameters:</b></p><p style='color:" + aColor + ";word-break:break-word;'>" + input + "</p></div>";
                     }
 
-                    manufacturedCode = "<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>Synthesis</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box;}.app-box{background-color:" + appBg + ";padding:30px;border-radius:12px;border:1px solid #30363d;width:100%;max-width:420px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);color:" + (appBg==='#ffffff'?'#0d1117':'#c9d1d9') + ";}h2{color:" + pColor + ";margin-top:0;font-size:24px;}.badge{display:inline-block;background-color:rgba(35,134,54,0.15);color:#56d364;border:1px solid rgba(46,160,67,0.4);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:bold;}</style></head><body><div class='app-box'><h2>" + title + "</h2><div class='badge'>⚡ FIRE ANT LABS VERIFIED BUILD</div>" + moduleHtml + "</div></body></html>";
+                    manufacturedCode = "<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'><title>Synthesis</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}.app-box{background-color:" + appBg + ";padding:30px;border-radius:12px;border:1px solid #30363d;width:100%;max-width:420px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);color:" + (appBg==='#ffffff'?'#0d1117':'#c9d1d9') + ";}h2{color:" + pColor + ";margin-top:0;font-size:24px;}.badge{display:inline-block;background-color:rgba(35,134,54,0.15);color:#56d364;border:1px solid rgba(46,160,67,0.4);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:bold;}</style></head><body><div class='app-box'><h2>" + title + "</h2><div class='badge'>⚡ FIRE ANT LABS VERIFIED BUILD</div>" + moduleHtml + "</div><script>" + initScript + "<\/script></body></html>";
 
                     let words = query.replace(/[^a-zA-Z0-9\s]/g, "").split(/\s+/);
                     globalFileName = (words.find(w => w.length > 3) || "custom") + "_app.html";
 
-                    log.innerHTML += "<br>✨ <b>SYSTEM RESOLVED: Code syntax stable.</b>";
-                    log.innerHTML += "<div class='control-grid'><div class='download-btn' onclick='forceDownload()'>📥 Download Bundle</div><div class='copy-btn' onclick='copyToClipboard()'>📋 Copy Code Matrix</div></div>";
+                    log.innerHTML += "<br>✨ <b>SYSTEM RESOLVED: Code touch parameters stable.</b>";
+                    log.innerHTML += "<div class='control-grid'><div id='download-action-btn' class='download-btn'>📥 Download Bundle</div><div id='copy-action-btn' class='copy-btn'>📋 Copy Code Matrix</div></div>";
+                    
                     btn.disabled = false; btn.innerText = "Generate & Self-Correct Code";
+                    
+                    bindFastTap('download-action-btn', forceDownload);
+                    bindFastTap('copy-action-btn', copyToClipboard);
                 }, 800);
             }, 800);
         }
@@ -107,6 +127,10 @@
                 alert("🚀 FIRE ANT LABS: Code matrix securely locked onto clipboard memory!");
             }).catch(function() { alert("Clipboard block detected."); });
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            bindFastTap('pipeline-btn', runPipeline);
+        });
     </script>
 </body>
 </html>

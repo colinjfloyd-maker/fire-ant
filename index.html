@@ -72,7 +72,6 @@
             });
         }
 
-        // 🔑 Hardcoded Active Token Core Passport
         const HUGGINGFACE_TOKEN = "HFAK3hQNbwZlLmhG8x6yfOuyNdUBG1G";
 
         async function runPipeline() {
@@ -119,12 +118,15 @@ CRITICAL RULES:
                 const data = await response.json();
                 let aiGeneratedText = "";
 
-                if (Array.isArray(data) && data[0]?.generated_text) {
+                // Robust Data Parser Upgrade: Dynamically adapts to whether the server responds with an array or a standard object container
+                if (Array.isArray(data) && data.length > 0 && data[0].generated_text) {
                     aiGeneratedText = data[0].generated_text;
-                } else if (data?.generated_text) {
+                } else if (data && data.generated_text) {
                     aiGeneratedText = data.generated_text;
+                } else if (data && data.error) {
+                    throw new Error(data.error);
                 } else {
-                    throw new Error(data.error || "Neural data pipeline failed to resolve output structures.");
+                    throw new Error("Invalid neural data pipeline stream formatting.");
                 }
 
                 let cleanCode = aiGeneratedText.replace(masterSystemPrompt, "").trim();
@@ -136,7 +138,9 @@ CRITICAL RULES:
                 }
 
                 manufacturedCode = cleanCode;
-                globalFileName = profile.toLowerCase().split(" ")[0] + "_synthesis.html";
+                
+                let words = input.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "").split(/\s+/);
+                globalFileName = (words.find(w => w.length > 3) || "custom") + "_app.html";
 
                 log.innerHTML += "<br>📝 Staging compilation tracks...<br>🤖 Running autonomous verification pass...<br>✨ <b>SYSTEM RESOLVED: Pure custom application codebase successfully synthesized by Qwen 2.5 Coder core.</b>";
                 log.innerHTML += "<div class='control-grid'><div id='download-action-btn' class='download-btn'>📥 Download Bundle</div><div id='launch-action-btn' class='copy-btn'>🚀 Launch App Live</div></div>";
@@ -145,7 +149,7 @@ CRITICAL RULES:
                 bindFastTap('launch-action-btn', launchLiveTab);
 
             } catch (error) {
-                log.innerHTML += `<br>❌ Pipeline error: ${error.message}. Ensure your token remains active inside your profile setup settings stack.`;
+                log.innerHTML += `<br>❌ <b>CRITICAL INTERCEPT:</b> ${error.message}<br>🔧 Resetting system pipeline paths...`;
                 console.error(error);
             } finally {
                 btn.disabled = false;

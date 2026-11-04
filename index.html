@@ -12,15 +12,20 @@
         .logo-placeholder { font-size: 48px; margin-bottom: 5px; }
         h1 { color: #ff7b72; margin: 0; font-size: 24px; letter-spacing: 1px; }
         p { color: #8b949e; margin: 0 0 20px 0; font-size: 14px; }
-        textarea { width: 100%; height: 120px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; resize: none; font-family: monospace; font-size: 14px; outline: none; -webkit-appearance: none; }
+        .panel { border: 1px solid #30363d; background: #0d1117; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: left; }
+        .panel-title { color: #58a6ff; font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 0.5px; }
+        select { width: 100%; background: #161b22; color: #c9d1d9; border: 1px solid #30363d; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 13px; outline: none; }
+        .check-label { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c9d1d9; cursor: pointer; margin-bottom: 8px; }
+        input[type="checkbox"] { accent-color: #238636; width: 16px; height: 16px; }
+        textarea { width: 100%; height: 90px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; resize: none; font-family: monospace; font-size: 14px; outline: none; -webkit-appearance: none; }
         textarea:focus { border-color: #58a6ff; }
-        button { background-color: #238636; color: white; border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 14px; -webkit-appearance: none; touch-action: manipulation; }
+        button { background-color: #238636; color: white; border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 5px; width: 100%; font-size: 14px; -webkit-appearance: none; touch-action: manipulation; }
         button:hover { background-color: #2ea043; }
         button:disabled { background-color: #21262d; color: #8b949e; cursor: not-allowed; border: 1px solid #30363d; }
         #log-output { margin-top: 20px; background: #0d1117; border: 1px solid #30363d; padding: 12px; border-radius: 6px; text-align: left; font-size: 12px; max-height: 250px; overflow-y: auto; display: none; color: #58a6ff; line-height: 1.6; }
         .control-grid { display: flex; gap: 10px; margin-top: 15px; }
         .download-btn, .copy-btn { flex: 1; background-color: #21262d; border: 1px solid #30363d; padding: 12px 5px; border-radius: 6px; font-weight: bold; font-size: 12px; text-align: center; cursor: pointer; transition: background 0.2s; text-decoration: none; -webkit-appearance: none; touch-action: manipulation; }
-        .download-btn { color: #58a6ff; } .copy-btn { color: #ff7b72; }
+        .download-btn { color: #58a6ff; } .copy-btn { color: #39ff14; }
         .download-btn:hover, .copy-btn:hover { background-color: #30363d; color: #ecf2f8; }
     </style>
 </head>
@@ -29,7 +34,33 @@
         <div class="logo-placeholder">🐜</div>
         <h1>FIRE ANT LABS</h1>
         <p>Autonomous Software Pipeline</p>
-        <textarea id="task-input" placeholder="Describe the software you want FIRE ANT to design..."></textarea>
+        
+        <div class="panel">
+            <span class="panel-title">👤 1. Select Profile Domain</span>
+            <select id="user-profile">
+                <option value="student">High School / Academic Student</option>
+                <option value="gamer">Pro Gamer / Stream Content Tracker</option>
+                <option value="developer">Workspace Utility Developer</option>
+            </select>
+        </div>
+
+        <div class="panel">
+            <span class="panel-title">🎨 2. Choose UI Styling Skin</span>
+            <select id="user-skin">
+                <option value="coral">Fire Ant Core (Dark Coral)</option>
+                <option value="cyberpunk">Cyberpunk Glow (Neon Cyan & Pink)</option>
+                <option value="matrix">Matrix Terminal (Phosphor Green)</option>
+                <option value="light">Minimalist White (Clean Light Mode)</option>
+            </select>
+        </div>
+
+        <div class="panel">
+            <span class="panel-title">⚙️ 3. Inject Core Component Rails</span>
+            <label class="check-label"><input type="checkbox" id="add-score"> Include Counter / Score Tracker</label>
+            <label class="check-label"><input type="checkbox" id="add-timer"> Include Countdown Focus Timer</label>
+        </div>
+
+        <textarea id="task-input" placeholder="Describe additional specialized features you want to inject into this application template..."></textarea>
         <button id="pipeline-btn">Generate & Self-Correct Code</button>
         <div id="log-output"></div>
     </div>
@@ -49,61 +80,63 @@
             });
         }
 
+        // Safety Filter: Safely escapes text inputs so user punctuation can never cause string crashes
+        function escapeHTML(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
         function runPipeline() {
             const btn = document.getElementById('pipeline-btn');
             const log = document.getElementById('log-output');
             const input = document.getElementById('task-input').value.trim();
-            if (!input) return alert("Please enter a software task description.");
+            
+            const profile = document.getElementById('user-profile').value;
+            const skin = document.getElementById('user-skin').value;
+            const needScore = document.getElementById('add-score').checked;
+            const needTimer = document.getElementById('add-timer').checked;
             
             btn.disabled = true;
             btn.innerText = "FIRE ANT Engine Initializing...";
             log.style.display = "block";
-            log.innerHTML = "📡 Packaging transmission payload...<br>⚙️ Activating local hardware processing rails...";
+            log.innerHTML = "📡 Extracting profile tokens...<br>⚙️ Configuring custom interface compilation layers...";
             
             setTimeout(() => {
-                log.innerHTML += "<br>📝 Fire Ant Engine scanning text...<br>🤖 Extraction parsed.<br>🔧 Compiling codebase streams...";
+                log.innerHTML += "<br>📝 Stitching custom theme assets...<br>🤖 Building dynamic interactive functions...<br>✨ Compilation successful.";
                 
                 setTimeout(() => {
-                    const query = input.toLowerCase();
                     let pColor = "#ff7b72", aColor = "#58a6ff", appBg = "#161b22";
-                    
-                    if (query.includes("neon") || query.includes("cyberpunk") || query.includes("retro")) { pColor = "#00ffcc"; aColor = "#ff007f"; }
-                    else if (query.includes("green") || query.includes("matrix")) { pColor = "#39ff14"; aColor = "#00ff00"; }
-                    else if (query.includes("light") || query.includes("white")) { pColor = "#4f46e5"; aColor = "#2563eb"; appBg = "#ffffff"; }
+                    if (skin === "cyberpunk") { pColor = "#00ffcc"; aColor = "#ff007f"; }
+                    else if (skin === "matrix") { pColor = "#39ff14"; aColor = "#00ff00"; }
+                    else if (skin === "light") { pColor = "#4f46e5"; aColor = "#2563eb"; appBg = "#ffffff"; }
 
-                    let title = "Custom Software Core", moduleHtml = ""; let initScript = "";
+                    let title = "Custom Application Framework";
+                    if (profile === "student") title = "🎓 Student Intel Hub";
+                    else if (profile === "gamer") title = "🎮 Gamer Stats Dashboard";
+                    else if (profile === "developer") title = "💻 Pro Dev Console Sandbox";
 
-                    if (query.includes("game") || query.includes("clicker") || query.includes("play")) {
-                        title = "Arcade Engine";
-                        moduleHtml = "<div style='background:#0d1117;padding:25px;border-radius:8px;border:1px solid #30363d;'><h3 style='color:" + pColor + ";'>Clicker Game Core</h3><h1 id='score-tracker' style='color:white;font-size:54px;margin:10px 0;'>0</h1><button id='game-core-btn' style='background:" + pColor + ";color:#0d1117;border:none;padding:12px;font-weight:bold;border-radius:6px;width:100%;cursor:pointer;touch-action:manipulation;'>TAP ENGINE CORE</button></div>";
-                        initScript = "const btn = document.getElementById('game-core-btn'); const handleTap = () => { document.getElementById('score-tracker').innerText = parseInt(document.getElementById('score-tracker').innerText)+1; }; btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(); }, {passive:false}); btn.addEventListener('click', handleTap);";
-                    } else if (query.includes("study") || query.includes("guide") || query.includes("quiz") || query.includes("history")) {
-                        title = "Intelligence Matrix";
-                        moduleHtml = "<div style='text-align:left;background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;'><h3>Study Workspace</h3><p>Topic target validated successfully. Custom study modules have been written directly to the local compilation download bundle.</p></div>";
-                    } else if (query.includes("timer") || query.includes("clock") || query.includes("stopwatch")) {
-                        title = "Precision Core";
-                        moduleHtml = "<div style='background:#0d1117;padding:25px;border-radius:8px;border:1px solid #30363d;'><h2 style='color:" + pColor + ";font-size:42px;margin:0 0 15px 0;'>25:00</h2><button id='timer-start-btn' style='background:transparent;color:" + aColor + ";border:2px solid " + aColor + ";padding:10px;border-radius:6px;font-weight:bold;width:100%;cursor:pointer;touch-action:manipulation;'>START TIMER</button></div>";
-                        initScript = "const btn = document.getElementById('timer-start-btn'); const handleTime = () => { alert('Countdown initialized.'); }; btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTime(); }, {passive:false}); btn.addEventListener('click', handleTime);";
-                    } else if (query.includes("calculator") || query.includes("math") || query.includes("calculate")) {
-                        title = "Calculation Array";
-                        moduleHtml = "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;'><input type='text' id='calc-display' style='width:100%;padding:12px;background:#161b22;border:1px solid #30363d;color:white;text-align:right;font-size:20px;margin-bottom:12px;box-sizing:border-box;' readonly value=''><div style='display:grid;grid-template-columns:repeat(4,1fr);gap:6px;'><button class='c-btn' data-val='clear' style='padding:12px;background:#30363d;color:white;border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>C</button><button class='c-btn' data-val='/' style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>/</button><button class='c-btn' data-val='*' style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>*</button><button class='c-btn' data-val='-' style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>-</button><button class='c-btn' data-val='7' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>7</button><button class='c-btn' data-val='8' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>8</button><button class='c-btn' data-val='9' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>9</button><button class='c-btn' data-val='+' style='padding:12px;background:#21262d;color:" + aColor + ";border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>+</button><button class='c-btn' data-val='4' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>4</button><button class='c-btn' data-val='5' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>5</button><button class='c-btn' data-val='6' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>6</button><button class='c-btn' data-val='=' style='grid-row:span 2;padding:12px;background:" + pColor + ";color:#0d1117;border:none;border-radius:4px;font-weight:bold;touch-action:manipulation;'>=</button><button class='c-btn' data-val='1' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>1</button><button class='c-btn' data-val='2' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>2</button><button class='c-btn' data-val='3' style='padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>3</button><button class='c-btn' data-val='0' style='grid-column:span 3;padding:12px;background:#161b22;color:white;border:none;border-radius:4px;touch-action:manipulation;'>0</button></div></div>";
-                        initScript = "document.querySelectorAll('.c-btn').forEach(btn => { const action = () => { const disp = document.getElementById('calc-display'); const v = btn.getAttribute('data-val'); if(v==='clear') disp.value=''; else if(v==='=') { try{disp.value=eval(disp.value)}catch(e){disp.value='Error'} } else disp.value+=v; }; btn.addEventListener('touchstart', (e)=>{e.preventDefault(); action();}, {passive:false}); btn.addEventListener('click', action); });";
-                    } else if (query.includes("todo") || query.includes("list") || query.includes("task")) {
-                        title = "Task Matrix";
-                        moduleHtml = "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;text-align:left;'><div style='display:flex;gap:5px;margin-bottom:10px;'><input type='text' id='todo-in' style='flex:1;padding:8px;background:#161b22;border:1px solid #30363d;color:white;border-radius:6px;'><button id='todo-add-btn' style='background:" + pColor + ";color:#0d1117;border:none;padding:0 10px;font-weight:bold;border-radius:6px;touch-action:manipulation;'>ADD</button></div><ul id='todo-list' style='margin:0;padding:0;list-style:none;'></ul></div>";
-                        initScript = "const btn = document.getElementById('todo-add-btn'); const handleAdd = () => { const input = document.getElementById('todo-in'); if(input.value){let li=document.createElement('li');li.style.padding='5px 0';li.style.color='#c9d1d9';li.innerText=input.value;document.getElementById('todo-list').appendChild(li);input.value=''} }; btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleAdd(); }, {passive:false}); btn.addEventListener('click', handleAdd);";
-                    } else {
-                        title = "Workspace Terminal";
-                        moduleHtml = "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;text-align:left;'><p style='color:#8b949e;font-size:12px;'><b>Blueprint Parameters:</b></p><p style='color:" + aColor + ";word-break:break-word;'>" + input + "</p></div>";
+                    let moduleHtml = ""; let initScript = "";
+
+                    if (needScore) {
+                        moduleHtml += "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;margin-bottom:12px;'><h4 style='color:" + pColor + ";margin-top:0;'>Live Telemetry Counter</h4><h1 id='score-tracker' style='color:white;font-size:42px;margin:10px 0;'>0</h1><button id='game-core-btn' style='background:" + pColor + ";color:#0d1117;border:none;padding:10px;font-weight:bold;border-radius:6px;width:100%;cursor:pointer;touch-action:manipulation;'>TAP ARRAY INCREMENT</button></div>";
+                        initScript += "const sBtn = document.getElementById('game-core-btn'); const handleTap = () => { document.getElementById('score-tracker').innerText = parseInt(document.getElementById('score-tracker').innerText)+1; }; sBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(); }, {passive:false}); sBtn.addEventListener('click', handleTap); ";
                     }
 
-                    manufacturedCode = "<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'><title>Synthesis</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}.app-box{background-color:" + appBg + ";padding:30px;border-radius:12px;border:1px solid #30363d;width:100%;max-width:420px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);color:" + (appBg==='#ffffff'?'#0d1117':'#c9d1d9') + ";}h2{color:" + pColor + ";margin-top:0;font-size:24px;}.badge{display:inline-block;background-color:rgba(35,134,54,0.15);color:#56d364;border:1px solid rgba(46,160,67,0.4);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:bold;}</style></head><body><div class='app-box'><h2>" + title + "</h2><div class='badge'>⚡ FIRE ANT LABS VERIFIED BUILD</div>" + moduleHtml + "</div><script>" + initScript + "<\/script></body></html>";
+                    if (needTimer) {
+                        moduleHtml += "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;margin-bottom:12px;'><h4 style='color:" + pColor + ";margin-top:0;'>Focus Timer Module</h4><h2 style='color:white;font-size:32px;margin:5px 0;'>25:00</h2><button id='timer-start-btn' style='background:transparent;color:" + aColor + ";border:2px solid " + aColor + ";padding:10px;border-radius:6px;font-weight:bold;width:100%;cursor:pointer;touch-action:manipulation;'>START TELEMETRY COUNTDOWN</button></div>";
+                        initScript += "const tBtn = document.getElementById('timer-start-btn'); const handleTime = () => { alert('Focus cycle initialized.'); }; tBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTime(); }, {passive:false}); tBtn.addEventListener('click', handleTime); ";
+                    }
 
-                    let words = query.replace(/[^a-zA-Z0-9\s]/g, "").split(/\s+/);
+                    // Crash Protected String Injection
+                    const safeInput = escapeHTML(input ? input : "No text directives entered.");
+                    moduleHtml += "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;text-align:left;'><h4 style='color:" + aColor + ";margin-top:0;'>Custom Spec Blueprint Fields</h4><div style='background:rgba(0,0,0,0.2);padding:10px;border-radius:4px;color:#c9d1d9;font-size:13px;word-break:break-word;font-family:monospace;border-left:2px solid " + pColor + ";'>" + safeInput + "</div></div>";
+
+                    manufacturedCode = "<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'><title>Custom Build</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}.app-box{background-color:" + appBg + ";padding:30px;border-radius:12px;border:1px solid #30363d;width:100%;max-width:420px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);color:" + (appBg==='#ffffff'?'#0d1117':'#c9d1d9') + ";}h2{color:" + pColor + ";margin-top:0;font-size:24px;}.badge{display:inline-block;background-color:rgba(35,134,54,0.15);color:#56d364;border:1px solid rgba(46,160,67,0.4);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:bold;}</style></head><body><div class='app-box'><h2>" + title + "</h2><div class='badge'>⚡ LIVE BUILD</div><div style='margin-top:20px;'>" + moduleHtml + "</div></div><script>" + initScript + "<\/script></body></html>";
+
+                    let words = safeInput.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "").split(/\s+/);
                     globalFileName = (words.find(w => w.length > 3) || "custom") + "_app.html";
 
-                    log.innerHTML += "<br>✨ <b>SYSTEM RESOLVED: Code touch parameters stable.</b>";
-                    log.innerHTML += "<div class='control-grid'><div id='download-action-btn' class='download-btn'>📥 Download Bundle</div><div id='launch-action-btn' class='copy-btn' style='color:#39ff14;'>🚀 Launch App Live</div></div>";
+                    log.innerHTML += "<br>✨ <b>SYSTEM RESOLVED: Custom matrix integrated safely.</b>";
+                    log.innerHTML += "<div class='control-grid'><div id='download-action-btn' class='download-btn'>📥 Download Bundle</div><div id='launch-action-btn' class='copy-btn'>🚀 Launch App Live</div></div>";
                     
                     btn.disabled = false; btn.innerText = "Generate & Self-Correct Code";
                     
@@ -113,7 +146,7 @@
             }, 800);
         }
 
-        def forceDownload() {
+        function forceDownload() {
             if (!manufacturedCode) return alert("No compilation bundle found.");
             const blob = new Blob([manufacturedCode], { type: "text/html" });
             const element = document.createElement("a");
@@ -122,14 +155,15 @@
         }
 
         function launchLiveTab() {
-            if (!manufacturedCode) return alert("No executable software container compiled.");
-            const newWindow = window.open();
-            if (newWindow) {
-                newWindow.document.open();
-                newWindow.document.write(manufacturedCode);
-                newWindow.document.close();
+            if (!manufacturedCode) return alert("No software compiled.");
+            const base64Code = btoa(unescape(encodeURIComponent(manufacturedCode)));
+            const dataUrl = "data:text/html;base64," + base64Code;
+            
+            const newTab = window.open();
+            if (newTab) {
+                newTab.location.href = dataUrl;
             } else {
-                alert("⚠️ iPhone Popup Blocker detected! Please allow popups for this website in your Safari settings to launch your software live.");
+                alert("⚠️ App launcher intercepted. Please allow popups for this site in your Safari/Chrome settings to initialize instant runtime rails.");
             }
         }
 

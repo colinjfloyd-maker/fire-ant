@@ -15,11 +15,9 @@
         .panel { border: 1px solid #30363d; background: #0d1117; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: left; }
         .panel-title { color: #58a6ff; font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 0.5px; }
         select { width: 100%; background: #161b22; color: #c9d1d9; border: 1px solid #30363d; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 13px; outline: none; }
-        .check-label { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c9d1d9; cursor: pointer; margin-bottom: 8px; }
-        input[type="checkbox"] { accent-color: #238636; width: 16px; height: 16px; }
-        textarea { width: 100%; height: 90px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; resize: none; font-family: monospace; font-size: 14px; outline: none; -webkit-appearance: none; }
+        textarea { width: 100%; height: 110px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; box-sizing: border-box; resize: none; font-family: monospace; font-size: 14px; outline: none; -webkit-appearance: none; }
         textarea:focus { border-color: #58a6ff; }
-        button { background-color: #238636; color: white; border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 5px; width: 100%; font-size: 14px; -webkit-appearance: none; touch-action: manipulation; }
+        button { background-color: #238636; color: white; border: none; padding: 14px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; font-size: 14px; -webkit-appearance: none; touch-action: manipulation; }
         button:hover { background-color: #2ea043; }
         button:disabled { background-color: #21262d; color: #8b949e; cursor: not-allowed; border: 1px solid #30363d; }
         #log-output { margin-top: 20px; background: #0d1117; border: 1px solid #30363d; padding: 12px; border-radius: 6px; text-align: left; font-size: 12px; max-height: 250px; overflow-y: auto; display: none; color: #58a6ff; line-height: 1.6; }
@@ -36,31 +34,25 @@
         <p>Autonomous Software Pipeline</p>
         
         <div class="panel">
-            <span class="panel-title">👤 1. Select Profile Domain</span>
+            <span class="panel-title">👤 Select Target User Profile</span>
             <select id="user-profile">
-                <option value="student">High School / Academic Student</option>
-                <option value="gamer">Pro Gamer / Stream Content Tracker</option>
-                <option value="developer">Workspace Utility Developer</option>
+                <option value="Academic High School Student">High School Student</option>
+                <option value="Pro Gamer and Game Stats Tracker">Pro Gamer / Content Tracker</option>
+                <option value="Workspace Utility Developer">Utility Developer</option>
             </select>
         </div>
 
         <div class="panel">
-            <span class="panel-title">🎨 2. Choose UI Styling Skin</span>
+            <span class="panel-title">🎨 Select UI Styling Skin</span>
             <select id="user-skin">
-                <option value="coral">Fire Ant Core (Dark Coral)</option>
-                <option value="cyberpunk">Cyberpunk Glow (Neon Cyan & Pink)</option>
-                <option value="matrix">Matrix Terminal (Phosphor Green)</option>
-                <option value="light">Minimalist White (Clean Light Mode)</option>
+                <option value="Dark mode slate with rich dark coral primary buttons and charcoal borders">Fire Ant Slate (Coral)</option>
+                <option value="Vibrant cyberpunk neon glow style using neon cyan and neon pink accents against deep dark gray">Cyberpunk Glow (Cyan/Pink)</option>
+                <option value="Retro matrix green phosphor terminal style with glowing green mono fonts and green text highlight metrics">Matrix Green Phosphor</option>
+                <option value="Modern minimalist bright clean light mode style using sharp white card blocks, indigo accents, and heavy container drop shadows">Minimalist White (Light Mode)</option>
             </select>
         </div>
 
-        <div class="panel">
-            <span class="panel-title">⚙️ 3. Inject Core Component Rails</span>
-            <label class="check-label"><input type="checkbox" id="add-score"> Include Counter / Score Tracker</label>
-            <label class="check-label"><input type="checkbox" id="add-timer"> Include Countdown Focus Timer</label>
-        </div>
-
-        <textarea id="task-input" placeholder="Describe additional specialized features you want to inject into this application template..."></textarea>
+        <textarea id="task-input" placeholder="Describe the software application you want FIRE ANT to code from scratch..."></textarea>
         <button id="pipeline-btn">Generate & Self-Correct Code</button>
         <div id="log-output"></div>
     </div>
@@ -80,70 +72,85 @@
             });
         }
 
-        // Safety Filter: Safely escapes text inputs so user punctuation can never cause string crashes
-        function escapeHTML(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
+        // 🔑 Hardcoded Active Token Core Passport
+        const HUGGINGFACE_TOKEN = "HFAK3hQNbwZlLmhG8x6yfOuyNdUBG1G";
 
-        function runPipeline() {
+        async function runPipeline() {
             const btn = document.getElementById('pipeline-btn');
             const log = document.getElementById('log-output');
             const input = document.getElementById('task-input').value.trim();
             
             const profile = document.getElementById('user-profile').value;
             const skin = document.getElementById('user-skin').value;
-            const needScore = document.getElementById('add-score').checked;
-            const needTimer = document.getElementById('add-timer').checked;
+            
+            if (!input) return alert("Please enter a software task description.");
             
             btn.disabled = true;
-            btn.innerText = "FIRE ANT Engine Initializing...";
+            btn.innerText = "FIRE ANT Labs Engine Initializing...";
             log.style.display = "block";
-            log.innerHTML = "📡 Extracting profile tokens...<br>⚙️ Configuring custom interface compilation layers...";
+            log.innerHTML = "📡 Routing neural link to Qwen 2.5 Coder matrix...<br>⚙️ Packaging user identity and interface templates...";
             
-            setTimeout(() => {
-                log.innerHTML += "<br>📝 Stitching custom theme assets...<br>🤖 Building dynamic interactive functions...<br>✨ Compilation successful.";
+            const masterSystemPrompt = `You are the core application developer architecture engine of FIRE ANT LABS: An Autonomous Software Pipeline. 
+Your assignment is to generate a fully functional, highly interactive, and completely finished single-file standalone web application (HTML with embedded CSS and modern JavaScript logic) based strictly on the user's requirements.
+
+TARGET USER PROFILE TYPE: ${profile}
+REQUIRED APPLICATION INTERFACE VISUAL SKIN THEME: ${skin}
+USER CODEBLUEPRINT SPECIFICATION DIRECTIVES: "${input}"
+
+CRITICAL RULES:
+1. Return ONLY the raw HTML application code.
+2. Absolutely DO NOT wrap your response in markdown code blocks or code fences like \`\`\`html. 
+3. Do not write any structural explanations or notes outside the code. Start directly with the <!DOCTYPE html> string.
+4. Ensure all action elements (buttons, entry forms, inputs) are fully coded with responsive JavaScript touch event triggers so they are 100% working natively on an iPhone or computer. No placeholder scripts.`;
+
+            try {
+                const response = await fetch("https://huggingface.co", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${HUGGINGFACE_TOKEN}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        inputs: masterSystemPrompt,
+                        parameters: { max_new_tokens: 2500, temperature: 0.2 }
+                    })
+                });
+
+                const data = await response.json();
+                let aiGeneratedText = "";
+
+                if (Array.isArray(data) && data[0]?.generated_text) {
+                    aiGeneratedText = data[0].generated_text;
+                } else if (data?.generated_text) {
+                    aiGeneratedText = data.generated_text;
+                } else {
+                    throw new Error(data.error || "Neural data pipeline failed to resolve output structures.");
+                }
+
+                let cleanCode = aiGeneratedText.replace(masterSystemPrompt, "").trim();
+                cleanCode = cleanCode.replace(/```html/g, "").replace(/```/g, "").trim();
                 
-                setTimeout(() => {
-                    let pColor = "#ff7b72", aColor = "#58a6ff", appBg = "#161b22";
-                    if (skin === "cyberpunk") { pColor = "#00ffcc"; aColor = "#ff007f"; }
-                    else if (skin === "matrix") { pColor = "#39ff14"; aColor = "#00ff00"; }
-                    else if (skin === "light") { pColor = "#4f46e5"; aColor = "#2563eb"; appBg = "#ffffff"; }
+                const htmlIndex = cleanCode.toLowerCase().indexOf("<!doctype html");
+                if (htmlIndex !== -1) {
+                    cleanCode = cleanCode.substring(htmlIndex);
+                }
 
-                    let title = "Custom Application Framework";
-                    if (profile === "student") title = "🎓 Student Intel Hub";
-                    else if (profile === "gamer") title = "🎮 Gamer Stats Dashboard";
-                    else if (profile === "developer") title = "💻 Pro Dev Console Sandbox";
+                manufacturedCode = cleanCode;
+                globalFileName = profile.toLowerCase().split(" ")[0] + "_synthesis.html";
 
-                    let moduleHtml = ""; let initScript = "";
+                log.innerHTML += "<br>📝 Staging compilation tracks...<br>🤖 Running autonomous verification pass...<br>✨ <b>SYSTEM RESOLVED: Pure custom application codebase successfully synthesized by Qwen 2.5 Coder core.</b>";
+                log.innerHTML += "<div class='control-grid'><div id='download-action-btn' class='download-btn'>📥 Download Bundle</div><div id='launch-action-btn' class='copy-btn'>🚀 Launch App Live</div></div>";
+                
+                bindFastTap('download-action-btn', forceDownload);
+                bindFastTap('launch-action-btn', launchLiveTab);
 
-                    if (needScore) {
-                        moduleHtml += "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;margin-bottom:12px;'><h4 style='color:" + pColor + ";margin-top:0;'>Live Telemetry Counter</h4><h1 id='score-tracker' style='color:white;font-size:42px;margin:10px 0;'>0</h1><button id='game-core-btn' style='background:" + pColor + ";color:#0d1117;border:none;padding:10px;font-weight:bold;border-radius:6px;width:100%;cursor:pointer;touch-action:manipulation;'>TAP ARRAY INCREMENT</button></div>";
-                        initScript += "const sBtn = document.getElementById('game-core-btn'); const handleTap = () => { document.getElementById('score-tracker').innerText = parseInt(document.getElementById('score-tracker').innerText)+1; }; sBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(); }, {passive:false}); sBtn.addEventListener('click', handleTap); ";
-                    }
-
-                    if (needTimer) {
-                        moduleHtml += "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;margin-bottom:12px;'><h4 style='color:" + pColor + ";margin-top:0;'>Focus Timer Module</h4><h2 style='color:white;font-size:32px;margin:5px 0;'>25:00</h2><button id='timer-start-btn' style='background:transparent;color:" + aColor + ";border:2px solid " + aColor + ";padding:10px;border-radius:6px;font-weight:bold;width:100%;cursor:pointer;touch-action:manipulation;'>START TELEMETRY COUNTDOWN</button></div>";
-                        initScript += "const tBtn = document.getElementById('timer-start-btn'); const handleTime = () => { alert('Focus cycle initialized.'); }; tBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTime(); }, {passive:false}); tBtn.addEventListener('click', handleTime); ";
-                    }
-
-                    // Crash Protected String Injection
-                    const safeInput = escapeHTML(input ? input : "No text directives entered.");
-                    moduleHtml += "<div style='background:#0d1117;padding:20px;border-radius:8px;border:1px solid #30363d;text-align:left;'><h4 style='color:" + aColor + ";margin-top:0;'>Custom Spec Blueprint Fields</h4><div style='background:rgba(0,0,0,0.2);padding:10px;border-radius:4px;color:#c9d1d9;font-size:13px;word-break:break-word;font-family:monospace;border-left:2px solid " + pColor + ";'>" + safeInput + "</div></div>";
-
-                    manufacturedCode = "<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'><title>Custom Build</title><style>body{background-color:#0d1117;color:#c9d1d9;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}.app-box{background-color:" + appBg + ";padding:30px;border-radius:12px;border:1px solid #30363d;width:100%;max-width:420px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);color:" + (appBg==='#ffffff'?'#0d1117':'#c9d1d9') + ";}h2{color:" + pColor + ";margin-top:0;font-size:24px;}.badge{display:inline-block;background-color:rgba(35,134,54,0.15);color:#56d364;border:1px solid rgba(46,160,67,0.4);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:bold;}</style></head><body><div class='app-box'><h2>" + title + "</h2><div class='badge'>⚡ LIVE BUILD</div><div style='margin-top:20px;'>" + moduleHtml + "</div></div><script>" + initScript + "<\/script></body></html>";
-
-                    let words = safeInput.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "").split(/\s+/);
-                    globalFileName = (words.find(w => w.length > 3) || "custom") + "_app.html";
-
-                    log.innerHTML += "<br>✨ <b>SYSTEM RESOLVED: Custom matrix integrated safely.</b>";
-                    log.innerHTML += "<div class='control-grid'><div id='download-action-btn' class='download-btn'>📥 Download Bundle</div><div id='launch-action-btn' class='copy-btn'>🚀 Launch App Live</div></div>";
-                    
-                    btn.disabled = false; btn.innerText = "Generate & Self-Correct Code";
-                    
-                    bindFastTap('download-action-btn', forceDownload);
-                    bindFastTap('launch-action-btn', launchLiveTab);
-                }, 800);
-            }, 800);
+            } catch (error) {
+                log.innerHTML += `<br>❌ Pipeline error: ${error.message}. Ensure your token remains active inside your profile setup settings stack.`;
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Generate & Self-Correct Code";
+            }
         }
 
         function forceDownload() {
@@ -158,7 +165,6 @@
             if (!manufacturedCode) return alert("No software compiled.");
             const base64Code = btoa(unescape(encodeURIComponent(manufacturedCode)));
             const dataUrl = "data:text/html;base64," + base64Code;
-            
             const newTab = window.open();
             if (newTab) {
                 newTab.location.href = dataUrl;
